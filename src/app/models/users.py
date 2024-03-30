@@ -1,12 +1,13 @@
-from datetime import datetime, timezone
+from datetime import datetime, UTC
+from typing import Optional
 
 import pymongo
 from beanie import Document
-from pydantic import EmailStr
+from pydantic import EmailStr, Field
 
 
-class Users(Document):
-    created_date: datetime = datetime.now(tz=timezone.utc)
+class User(Document):
+    created_date: datetime = Field(default_factory=lambda: datetime.now(tz=UTC))
     first_name: str | None = None
     last_name: str | None = None
     email: EmailStr
@@ -15,4 +16,7 @@ class Users(Document):
 
     class Settings:
         name = "users"
-        indexes = [[("email", pymongo.TEXT)]]
+
+    @classmethod
+    async def get_by_email(cls, email: str) -> Optional["User"]:
+        return await cls.find_one({"email": email})

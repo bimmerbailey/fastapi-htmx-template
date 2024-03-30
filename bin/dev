@@ -21,12 +21,12 @@ dump() {
 }
 
 dev_data () {
-  docker compose run --rm server python3 app/dev_data.py
+  docker compose run --rm server poetry run python development/data.py
 }
 
 shell() {
   if [[ "$1" = "mongo" ]]; then
-    docker compose exec -it mongo mongosh -u mongod -p Password123!
+    docker compose exec mongo mongosh -u mongod -p Password123!
   else
     docker compose exec -it "$1" /bin/sh
   fi

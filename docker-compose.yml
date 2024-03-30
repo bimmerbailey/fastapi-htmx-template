@@ -7,11 +7,14 @@ services:
       target: development
     depends_on:
       - "mongo"
+    environment:
+      DEBUG: true
     ports:
       - "8000:8000"
     volumes:
-    - "./src:/src"
-    - "./tests:/tests"
+    - "./src/app:/src/app"
+    - "./src/development:/src/development"
+    - "./src/tests:/src/tests"
 
   mongo:
     image: mongo:6.0.5
@@ -21,7 +24,7 @@ services:
       MONGO_INITDB_DATABASE: your_app
     volumes:
       - "mongo:/data/db"
-      - "./dev/init-db.js:/docker-entrypoint-initdb.d/init-db.js"
+      - "./src/development/init-db.js:/docker-entrypoint-initdb.d/init-db.js"
     expose:
       - "27017"
     restart: unless-stopped
